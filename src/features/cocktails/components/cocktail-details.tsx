@@ -1,9 +1,10 @@
 "use client";
 
 import { GlassWaterIcon, LeafIcon, WineIcon } from "lucide-react";
-import type { ElementType, ReactNode } from "react";
+import type { ElementType } from "react";
 
 import { Badge } from "@/components/ui/badge";
+import { FavoriteButton } from "@/features/favorites/favorite-button";
 
 import { splitInstructions } from "../instructions";
 import { alcoholLabel, categoryLabel } from "../labels";
@@ -19,15 +20,12 @@ interface CocktailDetailsProps {
   isLoadingIngredients?: boolean;
   /** Heading element – `h1` on the page, the dialog title inside the modal. */
   titleAs?: ElementType;
-  /** Extra controls rendered on top of the photo (e.g. the favourite button). */
-  imageActions?: ReactNode;
 }
 
 export function CocktailDetails({
   cocktail,
   isLoadingIngredients = false,
   titleAs: Title = "h1",
-  imageActions,
 }: CocktailDetailsProps) {
   const steps = splitInstructions(cocktail.instructions);
 
@@ -41,9 +39,6 @@ export function CocktailDetails({
           priority
           className="rounded-3xl shadow-xl shadow-primary/10"
         />
-        {imageActions && (
-          <div className="absolute top-3 right-3">{imageActions}</div>
-        )}
       </div>
 
       <div className="min-w-0">
@@ -73,7 +68,12 @@ export function CocktailDetails({
           {cocktail.name}
         </Title>
 
-        <div className="mt-5">
+        <div className="mt-5 flex flex-wrap gap-2">
+          <FavoriteButton
+            variant="labeled"
+            cocktailId={cocktail.id}
+            cocktailName={cocktail.name}
+          />
           <CopyLinkButton path={`/cocktails/${cocktail.id}`} />
         </div>
 

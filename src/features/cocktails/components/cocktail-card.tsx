@@ -2,6 +2,7 @@ import { LeafIcon } from "lucide-react";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
+import { FavoriteButton } from "@/features/favorites/favorite-button";
 
 import { categoryLabel } from "../labels";
 import type { Cocktail } from "../types";
@@ -23,6 +24,12 @@ export function CocktailCard({ cocktail, priority }: CocktailCardProps) {
           priority={priority}
           sizes="(min-width: 1024px) 270px, (min-width: 640px) 33vw, 50vw"
           className="transition-transform duration-500 ease-out group-hover:scale-105"
+        />
+        <FavoriteButton
+          cocktailId={cocktail.id}
+          cocktailName={cocktail.name}
+          // Above the card-wide link overlay.
+          className="absolute top-2 right-2 z-10"
         />
         {!cocktail.alcoholic && (
           <Badge className="absolute bottom-2 left-2 bg-banana text-banana-foreground shadow-sm">

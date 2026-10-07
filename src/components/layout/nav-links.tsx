@@ -1,10 +1,12 @@
 "use client";
 
 import { HeartIcon, MartiniIcon } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense, type ReactNode } from "react";
 
+import { useFavorites } from "@/features/favorites/use-favorites";
 import { cn } from "@/lib/utils";
 
 interface NavItem {
@@ -49,10 +51,41 @@ function NavLinkList({ pathname }: { pathname: string | null }) {
             >
               {item.icon}
               <span className="sr-only sm:not-sr-only">{item.label}</span>
+              {item.href === "/favorites" && <FavoritesCount />}
             </Link>
           </li>
         );
       })}
     </ul>
+  );
+}
+
+function FavoritesCount() {
+  const { ids } = useFavorites();
+  const count = ids.length;
+
+  return (
+    <AnimatePresence initial={false}>
+      {count > 0 && (
+        <motion.span
+          key="badge"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          exit={{ scale: 0 }}
+          className="grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-xs font-semibold text-primary-foreground tabular-nums"
+        >
+          <span className="sr-only">, liczba: </span>
+          {/* Re-keyed on every change, so the number bumps when it changes. */}
+          <motion.span
+            key={count}
+            initial={{ scale: 1.6 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 600, damping: 18 }}
+          >
+            {count}
+          </motion.span>
+        </motion.span>
+      )}
+    </AnimatePresence>
   );
 }
