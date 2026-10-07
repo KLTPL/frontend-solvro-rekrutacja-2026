@@ -91,7 +91,7 @@ function CatalogResults() {
         isPlaceholderData && "opacity-60",
       )}
     >
-      <p className="mb-4 text-sm text-muted-foreground" aria-live="polite">
+      <p className="mt-4 mb-4 text-sm text-muted-foreground" aria-live="polite">
         {activeCount > 0 && "Znaleziono: "}
         {pluralize(total, ["koktajl", "koktajle", "koktajli"])}
       </p>

@@ -19,15 +19,17 @@ import {
   loadFilterParams,
   toCocktailFilters,
 } from "@/features/filters/filter-params";
+import { Hero } from "@/features/hero/hero";
 import { getQueryClient } from "@/lib/query-client";
 
 export default function HomePage({ searchParams }: PageProps<"/">) {
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+    <main>
+      <Hero />
       <section
         id="katalog"
         aria-labelledby="catalog-heading"
-        className="scroll-mt-20 py-10"
+        className="mx-auto w-full max-w-6xl scroll-mt-12 px-4 py-10 sm:px-6"
       >
         <h2
           id="catalog-heading"

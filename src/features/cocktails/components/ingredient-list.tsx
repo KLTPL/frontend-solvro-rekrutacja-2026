@@ -1,6 +1,5 @@
 "use client";
 
-import { useAtomValue } from "jotai";
 import { CheckIcon, InfoIcon, SproutIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -15,14 +14,14 @@ import { cn } from "@/lib/utils";
 
 import { formatMeasure } from "../measure";
 import type { CocktailIngredient } from "../types";
-import { measureUnitAtom } from "./measure-unit-toggle";
+import { useMeasureUnit } from "./measure-unit-toggle";
 
 export function IngredientList({
   ingredients,
 }: {
   ingredients: CocktailIngredient[];
 }) {
-  const unit = useAtomValue(measureUnitAtom);
+  const [unit] = useMeasureUnit();
   // A tiny "shopping list": tick off what you already have at home.
   const [checked, setChecked] = useState<ReadonlySet<number>>(new Set());
 

@@ -1,6 +1,7 @@
 import { MartiniIcon } from "lucide-react";
 import Link from "next/link";
 
+import { RandomCocktailButton } from "@/features/cocktails/components/random-cocktail-button";
 import { ThemeToggle } from "@/features/theme/theme-toggle";
 
 import { NavLinks } from "./nav-links";
@@ -26,6 +27,7 @@ export function SiteHeader() {
           className="ml-auto flex items-center gap-1"
         >
           <NavLinks />
+          <RandomCocktailButton compact size="default" className="h-9 px-3" />
           <ThemeToggle />
         </nav>
       </div>

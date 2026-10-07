@@ -64,7 +64,7 @@ export function ActiveFilters() {
 
   return (
     <div
-      className="flex flex-wrap items-center gap-2"
+      className="mb-3 flex flex-wrap items-center gap-2"
       aria-label="Aktywne filtry"
     >
       <AnimatePresence initial={false} mode="popLayout">

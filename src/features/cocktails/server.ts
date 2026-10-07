@@ -5,6 +5,7 @@ import {
   fetchCategories,
   fetchCocktail,
   fetchCocktails,
+  fetchCocktailsByIds,
   fetchAllCocktailsWithIngredients,
   fetchGlasses,
 } from "./api";
@@ -52,4 +53,15 @@ export async function getUsedIngredients() {
   "use cache";
   cacheLife("days");
   return summarizeUsedIngredients(await fetchAllCocktailsWithIngredients());
+}
+
+// Hand-picked for the hero: photos that match the pink-and-banana palette.
+const FEATURED_COCKTAIL_IDS = [11064, 12316, 11938, 11936, 11000, 12322];
+
+export async function getFeaturedCocktails() {
+  "use cache";
+  cacheLife("days");
+  const cocktails = await fetchCocktailsByIds(FEATURED_COCKTAIL_IDS);
+  const byId = new Map(cocktails.map((cocktail) => [cocktail.id, cocktail]));
+  return FEATURED_COCKTAIL_IDS.flatMap((id) => byId.get(id) ?? []);
 }

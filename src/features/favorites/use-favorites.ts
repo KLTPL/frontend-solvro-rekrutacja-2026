@@ -3,13 +3,16 @@
 import { useAtom } from "jotai";
 import { useCallback } from "react";
 
+import { useHydrated } from "@/hooks/use-hydrated";
+
 import { favoriteIdsAtom, toggleFavoriteId } from "./favorites-store";
 
 const EMPTY: number[] = [];
 
 export function useFavorites() {
   const [storedIds, setStoredIds] = useAtom(favoriteIdsAtom);
-  const ids = storedIds ?? EMPTY;
+  const hydrated = useHydrated();
+  const ids = (hydrated && storedIds) || EMPTY;
 
   const toggle = useCallback(
     (id: number) =>
@@ -19,7 +22,7 @@ export function useFavorites() {
 
   return {
     ids,
-    isLoaded: storedIds !== null,
+    isLoaded: hydrated && storedIds !== null,
     isFavorite: (id: number) => ids.includes(id),
     toggle,
   };
