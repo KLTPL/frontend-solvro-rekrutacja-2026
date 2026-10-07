@@ -1,11 +1,12 @@
 import { apiFetch } from "@/lib/api-client";
 
+import type { UsedIngredient } from "./ingredient-stats";
+
 import { buildCocktailSearchParams } from "./search-params";
 import type {
   Cocktail,
   CocktailDetails,
   CocktailFilters,
-  Ingredient,
   Paginated,
 } from "./types";
 
@@ -57,6 +58,14 @@ export async function fetchRandomCocktail(signal?: Signal) {
   return data[0];
 }
 
+export async function fetchAllCocktailsWithIngredients() {
+  const { data } = await apiFetch<Paginated<CocktailDetails>>(
+    "/cocktails",
+    new URLSearchParams({ perPage: "1000", ingredients: "true" }),
+  );
+  return data;
+}
+
 export async function fetchAllCocktailIds() {
   const { data } = await apiFetch<Paginated<Cocktail>>(
     "/cocktails",
@@ -83,24 +92,11 @@ export async function fetchGlasses(signal?: Signal) {
   return data;
 }
 
-export async function searchIngredients(query: string, signal?: Signal) {
-  const params = new URLSearchParams({ perPage: "20", sort: "name" });
-  if (query.trim()) params.set("name", `%${query.trim()}%`);
-  const { data } = await apiFetch<Paginated<Ingredient>>(
-    "/ingredients",
-    params,
-    { signal },
-  );
-  return data;
-}
-
-export async function fetchIngredientsByIds(ids: number[], signal?: Signal) {
-  const params = new URLSearchParams({ perPage: String(ids.length) });
-  for (const id of ids) params.append("id[]", String(id));
-  const { data } = await apiFetch<Paginated<Ingredient>>(
-    "/ingredients",
-    params,
-    { signal },
-  );
-  return data;
+/** Served by our own route handler (see `app/api/ingredients/route.ts`). */
+export async function fetchUsedIngredients(signal?: Signal) {
+  const response = await fetch("/api/ingredients", { signal });
+  if (!response.ok) {
+    throw new Error(`Failed to load ingredients (${response.status})`);
+  }
+  return (await response.json()) as UsedIngredient[];
 }

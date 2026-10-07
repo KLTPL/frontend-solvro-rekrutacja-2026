@@ -2,6 +2,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { connection } from "next/server";
 import { Suspense } from "react";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { CocktailCatalog } from "@/features/cocktails/components/cocktail-catalog";
 import { CocktailGridSkeleton } from "@/features/cocktails/components/cocktail-grid";
 import {
@@ -34,7 +35,7 @@ export default function HomePage({ searchParams }: PageProps<"/">) {
         >
           Katalog
         </h2>
-        <Suspense fallback={<CocktailGridSkeleton />}>
+        <Suspense fallback={<CatalogSkeleton />}>
           <CatalogWithData searchParams={searchParams} />
         </Suspense>
       </section>
@@ -68,5 +69,15 @@ async function CatalogWithData({
     <HydrationBoundary state={dehydrate(queryClient)}>
       <CocktailCatalog />
     </HydrationBoundary>
+  );
+}
+
+function CatalogSkeleton() {
+  return (
+    <>
+      <Skeleton className="mb-6 h-11 rounded-full" />
+      <Skeleton className="mb-4 h-4 w-24" />
+      <CocktailGridSkeleton />
+    </>
   );
 }

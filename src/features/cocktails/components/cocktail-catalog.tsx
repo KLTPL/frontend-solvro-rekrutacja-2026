@@ -1,10 +1,11 @@
 "use client";
 
 import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
-import { CircleAlertIcon, RotateCcwIcon } from "lucide-react";
+import { CircleAlertIcon, GlassWaterIcon, RotateCcwIcon } from "lucide-react";
 
 import { StateMessage } from "@/components/state-message";
 import { Button } from "@/components/ui/button";
+import { FiltersBar } from "@/features/filters/components/filters-bar";
 import { useCocktailFilters } from "@/features/filters/use-cocktail-filters";
 import { pluralize } from "@/lib/pluralize";
 import { cn } from "@/lib/utils";
@@ -14,7 +15,16 @@ import { CocktailGrid, CocktailGridSkeleton } from "./cocktail-grid";
 import { LoadMore } from "./load-more";
 
 export function CocktailCatalog() {
-  const { filters } = useCocktailFilters();
+  return (
+    <>
+      <FiltersBar />
+      <CatalogResults />
+    </>
+  );
+}
+
+function CatalogResults() {
+  const { filters, activeCount, resetFilters } = useCocktailFilters();
   const {
     data,
     error,
@@ -53,6 +63,26 @@ export function CocktailCatalog() {
   const cocktails = data.pages.flatMap((page) => page.data);
   const total = data.pages[0]?.meta.total ?? 0;
 
+  if (total === 0) {
+    return (
+      <StateMessage
+        icon={<GlassWaterIcon />}
+        title="Nic tu nie nalano"
+        description="Żaden koktajl nie pasuje do wybranych filtrów. Spróbuj poluzować kryteria."
+        action={
+          activeCount > 0 && (
+            <Button
+              onClick={() => resetFilters()}
+              className="rounded-full px-4"
+            >
+              Wyczyść filtry
+            </Button>
+          )
+        }
+      />
+    );
+  }
+
   return (
     <div
       aria-busy={isPlaceholderData}
@@ -62,6 +92,7 @@ export function CocktailCatalog() {
       )}
     >
       <p className="mb-4 text-sm text-muted-foreground" aria-live="polite">
+        {activeCount > 0 && "Znaleziono: "}
         {pluralize(total, ["koktajl", "koktajle", "koktajli"])}
       </p>
 

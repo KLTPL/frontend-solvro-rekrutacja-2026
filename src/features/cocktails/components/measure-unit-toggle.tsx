@@ -13,6 +13,9 @@ export const measureUnitAtom = atomWithStorage<MeasureUnit>(
   "ml",
 );
 
+const itemClassName =
+  "rounded-full! px-3 data-[state=on]:bg-blush data-[state=on]:text-blush-foreground";
+
 export function MeasureUnitToggle() {
   const [unit, setUnit] = useAtom(measureUnitAtom);
 
@@ -20,17 +23,18 @@ export function MeasureUnitToggle() {
     <ToggleGroup
       type="single"
       size="sm"
-      variant="outline"
+      spacing={1}
       value={unit}
       onValueChange={(value) => {
         if (value) setUnit(value as MeasureUnit);
       }}
       aria-label="Jednostka miary"
+      className="rounded-full border border-input p-0.5"
     >
-      <ToggleGroupItem value="ml" className="px-3">
+      <ToggleGroupItem value="ml" className={itemClassName}>
         ml
       </ToggleGroupItem>
-      <ToggleGroupItem value="oz" className="px-3">
+      <ToggleGroupItem value="oz" className={itemClassName}>
         oz
       </ToggleGroupItem>
     </ToggleGroup>

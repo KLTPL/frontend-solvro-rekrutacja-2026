@@ -6,8 +6,7 @@ import {
   fetchCocktails,
   fetchCocktailsByIds,
   fetchGlasses,
-  fetchIngredientsByIds,
-  searchIngredients,
+  fetchUsedIngredients,
 } from "./api";
 import type { Cocktail, CocktailFilters } from "./types";
 
@@ -19,12 +18,7 @@ export const cocktailKeys = {
   byIds: (ids: number[]) => [...cocktailKeys.all, "by-ids", ids] as const,
   categories: () => [...cocktailKeys.all, "categories"] as const,
   glasses: () => [...cocktailKeys.all, "glasses"] as const,
-};
-
-export const ingredientKeys = {
-  all: ["ingredients"] as const,
-  search: (query: string) => [...ingredientKeys.all, "search", query] as const,
-  byIds: (ids: number[]) => [...ingredientKeys.all, "by-ids", ids] as const,
+  usedIngredients: () => [...cocktailKeys.all, "used-ingredients"] as const,
 };
 
 export function cocktailsInfiniteOptions(filters: CocktailFilters) {
@@ -66,19 +60,8 @@ export const glassesOptions = queryOptions({
   staleTime: Infinity,
 });
 
-export function ingredientSearchOptions(query: string) {
-  return queryOptions({
-    queryKey: ingredientKeys.search(query),
-    queryFn: ({ signal }) => searchIngredients(query, signal),
-    staleTime: Infinity,
-  });
-}
-
-export function ingredientsByIdsOptions(ids: number[]) {
-  return queryOptions({
-    queryKey: ingredientKeys.byIds(ids),
-    queryFn: ({ signal }) => fetchIngredientsByIds(ids, signal),
-    enabled: ids.length > 0,
-    staleTime: Infinity,
-  });
-}
+export const usedIngredientsOptions = queryOptions({
+  queryKey: cocktailKeys.usedIngredients(),
+  queryFn: ({ signal }) => fetchUsedIngredients(signal),
+  staleTime: Infinity,
+});

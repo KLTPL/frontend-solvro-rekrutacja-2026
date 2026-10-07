@@ -5,8 +5,10 @@ import {
   fetchCategories,
   fetchCocktail,
   fetchCocktails,
+  fetchAllCocktailsWithIngredients,
   fetchGlasses,
 } from "./api";
+import { summarizeUsedIngredients } from "./ingredient-stats";
 import type { CocktailFilters } from "./types";
 
 /*
@@ -43,4 +45,11 @@ export async function getGlasses() {
   "use cache";
   cacheLife("days");
   return fetchGlasses();
+}
+
+/** ~1 MB of raw data reduced to a small list – computed once and cached. */
+export async function getUsedIngredients() {
+  "use cache";
+  cacheLife("days");
+  return summarizeUsedIngredients(await fetchAllCocktailsWithIngredients());
 }

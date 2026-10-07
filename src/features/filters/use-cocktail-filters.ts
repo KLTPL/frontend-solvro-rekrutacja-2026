@@ -1,7 +1,9 @@
 "use client";
 
 import { useQueryStates } from "nuqs";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
+
+import { countActiveFilters } from "@/features/cocktails/search-params";
 
 import { filterParsers, toCocktailFilters } from "./filter-params";
 
@@ -16,5 +18,24 @@ export function useCocktailFilters() {
 
   const filters = useMemo(() => toCocktailFilters(params), [params]);
 
-  return { params, filters, setParams };
+  /** Clears every filter but keeps the chosen sort order. */
+  const resetFilters = useCallback(
+    () =>
+      setParams({
+        q: null,
+        category: null,
+        glass: null,
+        alcoholic: null,
+        ingredients: null,
+      }),
+    [setParams],
+  );
+
+  return {
+    params,
+    filters,
+    setParams,
+    resetFilters,
+    activeCount: countActiveFilters(filters),
+  };
 }
