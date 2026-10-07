@@ -42,7 +42,8 @@ export interface Paginated<T> {
   data: T[];
 }
 
-export const sortOptions = ["name", "-name", "-createdAt"] as const;
+// The API expects an explicit direction prefix – a bare "name" is silently ignored.
+export const sortOptions = ["+name", "-name", "-createdAt"] as const;
 export type CocktailSort = (typeof sortOptions)[number];
 
 export interface CocktailFilters {

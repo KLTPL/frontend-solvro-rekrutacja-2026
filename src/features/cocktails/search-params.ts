@@ -8,7 +8,7 @@ export const defaultFilters: CocktailFilters = {
   glass: null,
   alcoholic: null,
   ingredientIds: [],
-  sort: "name",
+  sort: "+name",
 };
 
 /** Translates UI filters into the query string understood by the cocktails API. */

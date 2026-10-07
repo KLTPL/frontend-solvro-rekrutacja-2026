@@ -10,7 +10,7 @@ describe("buildCocktailSearchParams", () => {
   it("sends only pagination and sorting for default filters", () => {
     const params = buildCocktailSearchParams(defaultFilters, 3, 12);
 
-    expect(params.toString()).toBe("page=3&perPage=12&sort=name");
+    expect(params.toString()).toBe("page=3&perPage=12&sort=%2Bname");
   });
 
   it("wraps the search term in ILIKE wildcards", () => {
