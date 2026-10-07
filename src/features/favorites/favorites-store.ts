@@ -17,7 +17,7 @@ export function sanitizeFavoriteIds(value: unknown): number[] {
 }
 
 export const favoriteIdsAtom = atomWithStorage<FavoriteIds>(
-  "barek-favorites",
+  "barownik-favorites",
   null,
   {
     ...jsonStorage,

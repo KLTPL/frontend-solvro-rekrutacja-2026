@@ -28,8 +28,8 @@ const fraunces = Fraunces({
 
 export const metadata: Metadata = {
   title: {
-    default: "Barek — przeglądarka koktajli",
-    template: "%s · Barek",
+    default: "Barownik — przeglądarka koktajli",
+    template: "%s · Barownik",
   },
   description:
     "Przeglądaj, wyszukuj i zapisuj ulubione koktajle. Składniki, proporcje i instrukcje w jednym miejscu.",

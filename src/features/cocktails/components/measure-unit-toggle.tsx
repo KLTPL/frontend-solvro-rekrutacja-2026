@@ -10,7 +10,7 @@ import type { MeasureUnit } from "../measure";
 
 /** Millilitres by default – that is what most people in Poland measure with. */
 const measureUnitAtom = atomWithStorage<MeasureUnit>(
-  "barek-measure-unit",
+  "barownik-measure-unit",
   "ml",
 );
 

@@ -1,6 +1,6 @@
 export type Theme = "light" | "dark";
 
-export const THEME_STORAGE_KEY = "barek-theme";
+export const THEME_STORAGE_KEY = "barownik-theme";
 
 /**
  * Runs before first paint (inlined in <head>) so the page never flashes

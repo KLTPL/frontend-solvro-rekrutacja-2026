@@ -1,4 +1,4 @@
-# Barek — przeglądarka koktajli
+# Barownik — przeglądarka koktajli
 
 Aplikacja do przeglądania, wyszukiwania i zapisywania koktajli z [Solvro Cocktails API](https://cocktails.solvro.pl). Zadanie rekrutacyjne do KN Solvro.
 
