@@ -7,6 +7,7 @@ import { FavoriteButton } from "@/features/favorites/favorite-button";
 import { categoryLabel } from "../labels";
 import type { Cocktail } from "../types";
 import { CocktailImage } from "./cocktail-image";
+import { LinkPendingOverlay } from "./link-pending-overlay";
 
 interface CocktailCardProps {
   cocktail: Cocktail;
@@ -43,9 +44,11 @@ export function CocktailCard({ cocktail, priority }: CocktailCardProps) {
         <h3 className="text-lg leading-tight font-semibold text-balance">
           <Link
             href={`/cocktails/${cocktail.id}`}
+            scroll={false}
             className="outline-none after:absolute after:inset-0 after:rounded-3xl"
           >
             {cocktail.name}
+            <LinkPendingOverlay />
           </Link>
         </h3>
         <p className="mt-1 truncate text-sm text-muted-foreground">
