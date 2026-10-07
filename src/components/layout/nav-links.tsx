@@ -3,7 +3,7 @@
 import { HeartIcon, MartiniIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -19,8 +19,20 @@ const items: NavItem[] = [
 ];
 
 export function NavLinks() {
-  const pathname = usePathname();
+  return (
+    // The current path is only known at request time – until then the links
+    // render without the active state, keeping the header in the static shell.
+    <Suspense fallback={<NavLinkList pathname={null} />}>
+      <ActiveNavLinks />
+    </Suspense>
+  );
+}
 
+function ActiveNavLinks() {
+  return <NavLinkList pathname={usePathname()} />;
+}
+
+function NavLinkList({ pathname }: { pathname: string | null }) {
   return (
     <ul className="flex items-center gap-1">
       {items.map((item) => {

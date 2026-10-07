@@ -34,11 +34,12 @@ export const metadata: Metadata = {
     "Przeglądaj, wyszukuj i zapisuj ulubione koktajle. Składniki, proporcje i instrukcje w jednym miejscu.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children, modal }: LayoutProps<"/">) {
   return (
     <html
       lang="pl"
       suppressHydrationWarning
+      data-scroll-behavior="smooth"
       className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
     >
       <head>
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <SiteHeader />
           <div className="flex flex-1 flex-col">{children}</div>
           <SiteFooter />
+          {modal}
         </Providers>
       </body>
     </html>
