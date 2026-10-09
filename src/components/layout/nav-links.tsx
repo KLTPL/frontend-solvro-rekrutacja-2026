@@ -80,7 +80,7 @@ function FavoritesCount() {
             key={count}
             initial={{ scale: 1.6 }}
             animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 600, damping: 18 }}
+            transition={{ type: "spring", stiffness: 600, damping: 26 }}
           >
             {count}
           </motion.span>

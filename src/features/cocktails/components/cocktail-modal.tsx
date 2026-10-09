@@ -3,6 +3,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { CircleAlertIcon, GlassWaterIcon, RotateCcwIcon } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { StateMessage } from "@/components/state-message";
 import { Button } from "@/components/ui/button";
@@ -23,16 +24,20 @@ export function CocktailModal() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
   const id = parseCocktailId(params.id);
+  // Closing plays the exit animation first and leaves the route only once it
+  // has finished – navigating right away would hide the modal in one frame.
+  const [open, setOpen] = useState(true);
+  // Next keeps a closed modal mounted but hidden and reveals it again when
+  // the same cocktail is reopened, so it has to be open by then.
+  useEffect(() => () => setOpen(true), []);
 
   return (
-    <Dialog
-      open
-      onOpenChange={(open) => {
-        if (!open) router.back();
-      }}
-    >
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
         aria-describedby={undefined}
+        onAnimationEnd={(event) => {
+          if (!open && event.target === event.currentTarget) router.back();
+        }}
         className="max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-3xl p-5 sm:max-w-5xl sm:p-8"
       >
         {id === null ? <CocktailNotFound /> : <ModalBody id={id} />}

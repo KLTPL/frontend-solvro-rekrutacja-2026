@@ -22,6 +22,18 @@ export function readTheme(): Theme {
 }
 
 export function applyTheme(theme: Theme) {
-  document.documentElement.classList.toggle("dark", theme === "dark");
-  localStorage.setItem(THEME_STORAGE_KEY, theme);
+  const update = () => {
+    const root = document.documentElement;
+    // Elements with their own colour transitions would lag behind the
+    // background – switch every colour in the same frame instead.
+    root.classList.add("theme-switching");
+    root.classList.toggle("dark", theme === "dark");
+    void root.offsetHeight; // Apply the new colours while transitions are off.
+    root.classList.remove("theme-switching");
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+  };
+
+  // Cross-fade the whole page rather than jumping between light and dark.
+  if ("startViewTransition" in document) document.startViewTransition(update);
+  else update();
 }

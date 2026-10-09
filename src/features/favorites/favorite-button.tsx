@@ -1,7 +1,7 @@
 "use client";
 
 import { HeartIcon } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useAnimate } from "motion/react";
 import { useState } from "react";
 
 import { cn } from "@/lib/utils";
@@ -26,19 +26,30 @@ export function FavoriteButton({
   const active = isFavorite(cocktailId);
   // Animate only real clicks, not favourites appearing once storage loads.
   const [interacted, setInteracted] = useState(false);
+  const [heartRef, animate] = useAnimate<HTMLSpanElement>();
   const label = active
     ? `Usuń z ulubionych: ${cocktailName}`
     : `Dodaj do ulubionych: ${cocktailName}`;
 
   return (
-    <button
+    <motion.button
       type="button"
       aria-pressed={active}
       aria-label={variant === "icon" ? label : undefined}
       title={label}
+      whileTap={{ scale: 0.9 }}
       onClick={() => {
         setInteracted(true);
         toggle(cocktailId);
+        if (!active) {
+          // A kick of velocity from the heart's current size, so it pops
+          // without restarting from scratch when tapped repeatedly.
+          animate(
+            heartRef.current,
+            { scale: 1 },
+            { type: "spring", stiffness: 400, damping: 20, velocity: 8 },
+          );
+        }
       }}
       className={cn(
         "relative inline-flex shrink-0 items-center justify-center gap-2 rounded-full font-medium transition-colors focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none",
@@ -50,13 +61,7 @@ export function FavoriteButton({
       )}
     >
       <span className="relative grid place-items-center">
-        <motion.span
-          key={String(active)}
-          initial={interacted ? { scale: active ? 0.4 : 1 } : false}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", stiffness: 500, damping: 14 }}
-          className="flex"
-        >
+        <span ref={heartRef} className="flex">
           <HeartIcon
             aria-hidden
             className={cn(
@@ -64,7 +69,7 @@ export function FavoriteButton({
               active && "fill-primary text-primary",
             )}
           />
-        </motion.span>
+        </span>
         {/* A single soft ring when a cocktail is added – no confetti. */}
         <AnimatePresence>
           {interacted && active && (
@@ -81,6 +86,6 @@ export function FavoriteButton({
         </AnimatePresence>
       </span>
       {variant === "labeled" && (active ? "W ulubionych" : "Do ulubionych")}
-    </button>
+    </motion.button>
   );
 }

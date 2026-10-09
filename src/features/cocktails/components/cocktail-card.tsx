@@ -17,7 +17,8 @@ interface CocktailCardProps {
 
 export function CocktailCard({ cocktail, priority }: CocktailCardProps) {
   return (
-    <article className="group relative h-full rounded-3xl border border-border/70 bg-card p-2 shadow-xs transition-[translate,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 has-focus-visible:ring-3 has-focus-visible:ring-ring/50">
+    // Pressing the card (not the heart) gives instant feedback, before the details load.
+    <article className="group relative h-full rounded-3xl border border-border/70 bg-card p-2 shadow-xs transition-[translate,scale,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 has-focus-visible:ring-3 has-focus-visible:ring-ring/50 has-[a:active]:scale-98 has-[a:active]:duration-100">
       <div className="relative overflow-hidden rounded-2xl">
         <CocktailImage
           src={cocktail.imageUrl}

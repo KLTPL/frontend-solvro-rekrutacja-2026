@@ -13,6 +13,7 @@ const gridClassName =
 
 const ABOVE_THE_FOLD = 8;
 const STAGGER_GROUP = 12;
+const spring = { type: "spring", stiffness: 260, damping: 30 } as const;
 
 export function CocktailGrid({
   cocktails,
@@ -29,15 +30,17 @@ export function CocktailGrid({
             key={cocktail.id}
             layout="position"
             initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{
-              type: "spring",
-              stiffness: 260,
-              damping: 30,
+            animate={{
+              opacity: 1,
+              y: 0,
               // Newly appended cards cascade in, a few at a time.
-              delay: (index % STAGGER_GROUP) * 0.03,
+              transition: { ...spring, delay: (index % STAGGER_GROUP) * 0.03 },
             }}
+            // Outgoing cards leave quickly and all at once, so they never
+            // linger on top of the incoming ones.
+            exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
+            // Used for the layout animation – cards reflow without a delay.
+            transition={spring}
           >
             <CocktailCard
               cocktail={cocktail}
