@@ -38,7 +38,11 @@ export function CocktailModal() {
         onAnimationEnd={(event) => {
           if (!open && event.target === event.currentTarget) router.back();
         }}
-        className="max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-3xl p-5 sm:max-w-5xl sm:p-8"
+        // The same size for every cocktail, so nothing moves once the
+        // ingredients replace their skeleton; longer recipes scroll inside.
+        // The scrollbar's space is reserved up front, so it does not narrow
+        // the photo when a long recipe needs it.
+        className="h-[calc(100dvh-2rem)] [scrollbar-gutter:stable_both-edges] overflow-y-auto rounded-3xl p-5 sm:max-w-5xl sm:p-8 md:h-[min(48rem,calc(100dvh-2rem))]"
       >
         {id === null ? <CocktailNotFound /> : <ModalBody id={id} />}
       </DialogContent>
@@ -62,6 +66,7 @@ function ModalBody({ id }: { id: number }) {
         <StateMessage
           icon={<CircleAlertIcon />}
           title="Nie udało się pobrać koktajlu"
+          className="justify-center"
           description={query.error.message}
           action={
             <Button
@@ -102,6 +107,8 @@ function CocktailNotFound() {
       <StateMessage
         icon={<GlassWaterIcon />}
         title="Pusta szklanka"
+        // Fills the fixed-size modal, so the message sits in its middle.
+        className="justify-center"
         description="Ten koktajl nie istnieje albo został usunięty."
       />
     </>

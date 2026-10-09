@@ -31,7 +31,9 @@ export function CocktailDetails({
 
   return (
     <article className="grid gap-6 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] md:gap-10">
-      <div className="relative self-start md:sticky md:top-6">
+      {/* In the modal the offset would push the photo below its skeleton –
+          the scroll area's padding already keeps it off the edge there. */}
+      <div className="relative self-start md:sticky md:top-6 md:in-data-[slot=dialog-content]:top-0">
         <CocktailImage
           src={cocktail.imageUrl}
           alt={cocktail.name}
