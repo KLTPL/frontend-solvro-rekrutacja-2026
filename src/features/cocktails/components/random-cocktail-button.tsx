@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ShuffleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import type { ComponentProps } from "react";
+import { useTransition, type ComponentProps } from "react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -27,6 +27,8 @@ export function RandomCocktailButton({
 }: RandomCocktailButtonProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
+  // Opening the modal needs its own server round trip after the draw.
+  const [isNavigating, startTransition] = useTransition();
 
   const { mutate, isPending, isError } = useMutation({
     mutationFn: async () => {
@@ -36,15 +38,19 @@ export function RandomCocktailButton({
       return cocktail;
     },
     onSuccess: (cocktail) =>
-      router.push(`/cocktails/${cocktail.id}`, { scroll: false }),
+      startTransition(() =>
+        router.push(`/cocktails/${cocktail.id}`, { scroll: false }),
+      ),
   });
+  // Busy until the modal is open, so a second click cannot draw again.
+  const isBusy = isPending || isNavigating;
 
   return (
     <Button
       variant={variant}
       size={size}
       onClick={() => mutate()}
-      disabled={isPending}
+      disabled={isBusy}
       aria-label={compact ? "Wylosuj koktajl" : undefined}
       title="Wylosuj koktajl"
       className={cn("rounded-full", className)}
@@ -54,11 +60,11 @@ export function RandomCocktailButton({
         aria-hidden
         className={cn(
           "transition-transform duration-500",
-          isPending && "motion-safe:animate-spin",
+          isBusy && "motion-safe:animate-spin",
         )}
       />
       <span className={cn(compact && "sr-only sm:not-sr-only")}>
-        {isPending ? "Losuję…" : isError ? "Spróbuj ponownie" : "Losuj koktajl"}
+        {isBusy ? "Losuję…" : isError ? "Spróbuj ponownie" : "Losuj koktajl"}
       </span>
     </Button>
   );
