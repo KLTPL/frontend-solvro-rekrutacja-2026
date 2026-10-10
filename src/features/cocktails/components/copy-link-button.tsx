@@ -5,7 +5,16 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 
-export function CopyLinkButton({ path }: { path: string }) {
+interface CopyLinkButtonProps {
+  path: string;
+  /** `icon` fits compact bars, `labeled` is a regular pill button. */
+  variant?: "icon" | "labeled";
+}
+
+export function CopyLinkButton({
+  path,
+  variant = "labeled",
+}: CopyLinkButtonProps) {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -21,6 +30,23 @@ export function CopyLinkButton({ path }: { path: string }) {
     setCopied(true);
   }
 
+  const label = copied ? "Skopiowano" : "Kopiuj link";
+
+  if (variant === "icon") {
+    return (
+      <Button
+        variant="outline"
+        size="icon"
+        className="rounded-full"
+        onClick={copy}
+        aria-label={label}
+        title={label}
+      >
+        {copied ? <CheckIcon aria-hidden /> : <LinkIcon aria-hidden />}
+      </Button>
+    );
+  }
+
   return (
     <Button
       variant="outline"
@@ -33,7 +59,7 @@ export function CopyLinkButton({ path }: { path: string }) {
       ) : (
         <LinkIcon data-icon="inline-start" />
       )}
-      {copied ? "Skopiowano" : "Kopiuj link"}
+      {label}
     </Button>
   );
 }

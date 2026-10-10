@@ -40,11 +40,16 @@ export function CocktailModal() {
         }}
         // The same size for every cocktail, so nothing moves once the
         // ingredients replace their skeleton; longer recipes scroll inside.
-        // The scrollbar's space is reserved up front, so it does not narrow
-        // the photo when a long recipe needs it.
-        className="h-[calc(100dvh-2rem)] [scrollbar-gutter:stable_both-edges] overflow-y-auto rounded-3xl p-5 sm:max-w-5xl sm:p-8 md:h-[min(48rem,calc(100dvh-2rem))]"
+        // Only the inner area scrolls, so the close button stays in its
+        // corner, on a blurred chip that keeps it readable over the photo.
+        className="h-[calc(100dvh-2rem)] grid-rows-[minmax(0,1fr)] overflow-hidden rounded-3xl p-0 sm:max-w-5xl md:h-[min(48rem,calc(100dvh-2rem))] [&>[data-slot=dialog-close]]:rounded-full [&>[data-slot=dialog-close]]:bg-popover/75 [&>[data-slot=dialog-close]]:backdrop-blur-md"
       >
-        {id === null ? <CocktailNotFound /> : <ModalBody id={id} />}
+        {/* The scrollbar's space is reserved up front, so it does not narrow
+            the photo when a long recipe needs it. Isolated, so pinned bars
+            inside stay under the close button. */}
+        <div className="isolate grid [scrollbar-gutter:stable_both-edges] overflow-y-auto p-5 sm:p-8">
+          {id === null ? <CocktailNotFound /> : <ModalBody id={id} />}
+        </div>
       </DialogContent>
     </Dialog>
   );
