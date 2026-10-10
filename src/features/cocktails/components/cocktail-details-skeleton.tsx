@@ -6,7 +6,9 @@ export function CocktailDetailsSkeleton() {
   return (
     <div
       aria-hidden
-      className="grid gap-6 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] md:gap-10"
+      // An explicit track, so the square placeholder cannot grow wider than
+      // the single column on phones and push past the photo's size.
+      className="grid grid-cols-[minmax(0,1fr)] gap-6 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] md:gap-10"
     >
       <Skeleton className="aspect-square rounded-3xl" />
       <div>

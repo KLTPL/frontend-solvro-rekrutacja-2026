@@ -26,31 +26,58 @@ const slots = [
 ];
 const hiddenSlot = { x: "0%", rotate: 0, scale: 0.6, opacity: 0, zIndex: 0 };
 
+// Shared by the centre link and the side buttons, so they look the same.
+const cardClassName =
+  "relative block h-full w-full cursor-pointer overflow-hidden rounded-t-full rounded-b-3xl border-[6px] border-card bg-card shadow-2xl shadow-primary/20 focus-visible:ring-4 focus-visible:ring-ring/60 focus-visible:outline-none";
+
 /**
  * The hero's main animation: three arch-framed cocktails that rise in on
  * load and then slowly rotate like a carousel, with garnishes floating
  * around them. Pauses on hover, off-screen and with reduced motion.
+ * The centre card opens its cocktail, a side card is brought to the front.
  */
 export function HeroShowcase({ cocktails }: { cocktails: Cocktail[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inView = useInView(containerRef);
   const reduceMotion = useReducedMotion();
   const [offset, setOffset] = useState(0);
+  // Set once the carousel first moves, so returning to offset 0 later does
+  // not replay the entrance.
+  const [hasMoved, setHasMoved] = useState(false);
+  // Bumped by a manual pick to restart the timer for a full cycle.
+  const [manualPicks, setManualPicks] = useState(0);
   const [hovered, setHovered] = useState(false);
+  const featuredLinkRef = useRef<HTMLAnchorElement>(null);
+  const focusFeaturedRef = useRef(false);
 
   const isRotating = inView && !hovered && !reduceMotion;
   useEffect(() => {
     if (!isRotating) return;
-    const interval = setInterval(
-      () => setOffset((current) => current + 1),
-      CYCLE_MS,
-    );
+    const interval = setInterval(() => {
+      setOffset((current) => current + 1);
+      setHasMoved(true);
+    }, CYCLE_MS);
     return () => clearInterval(interval);
-  }, [isRotating]);
+  }, [isRotating, manualPicks]);
+
+  // A picked side card turns into the centre link – keep focus on it.
+  useEffect(() => {
+    if (!focusFeaturedRef.current) return;
+    focusFeaturedRef.current = false;
+    featuredLinkRef.current?.focus({ preventScroll: true });
+  }, [offset]);
 
   if (cocktails.length < slots.length) return null;
 
-  const featured = cocktails[(offset + 1) % cocktails.length];
+  const count = cocktails.length;
+  const featured = cocktails[(((offset + 1) % count) + count) % count];
+
+  function bringToFront(by: number) {
+    setOffset((current) => current + by);
+    setHasMoved(true);
+    setManualPicks((current) => current + 1);
+    focusFeaturedRef.current = true;
+  }
 
   return (
     <div
@@ -67,9 +94,18 @@ export function HeroShowcase({ cocktails }: { cocktails: Cocktail[] }) {
 
       <div className="relative aspect-[5/4]">
         {cocktails.map((cocktail, index) => {
-          const count = cocktails.length;
           const position = (((index - offset) % count) + count) % count;
           const slot = slots[position] ?? hiddenSlot;
+          const image = cocktail.imageUrl && (
+            <Image
+              src={cocktail.imageUrl}
+              alt=""
+              fill
+              sizes="(min-width: 1024px) 240px, 50vw"
+              preload={position === 1}
+              className="rounded-t-full rounded-b-[1.1rem] object-cover"
+            />
+          );
           return (
             <motion.div
               key={cocktail.id}
@@ -80,24 +116,35 @@ export function HeroShowcase({ cocktails }: { cocktails: Cocktail[] }) {
                 stiffness: 90,
                 damping: 18,
                 // Cards rise in one after another on the first render only.
-                delay: offset === 0 ? 0.15 + position * 0.12 : 0,
+                delay: hasMoved ? 0 : 0.15 + position * 0.12,
               }}
               style={{ zIndex: slot.zIndex }}
               className="absolute inset-x-[22%] top-0 bottom-[6%]"
-              aria-hidden={position !== 1}
+              // Cards waiting off-stage can be neither seen nor reached.
+              inert={position >= slots.length}
             >
-              <div className="relative h-full overflow-hidden rounded-t-full rounded-b-3xl border-[6px] border-card bg-card shadow-2xl shadow-primary/20">
-                {cocktail.imageUrl && (
-                  <Image
-                    src={cocktail.imageUrl}
-                    alt={position === 1 ? cocktail.name : ""}
-                    fill
-                    sizes="(min-width: 1024px) 240px, 50vw"
-                    preload={position === 1}
-                    className="rounded-t-full rounded-b-[1.1rem] object-cover"
-                  />
-                )}
-              </div>
+              {position === 1 ? (
+                <Link
+                  ref={featuredLinkRef}
+                  href={`/cocktails/${cocktail.id}`}
+                  scroll={false}
+                  aria-label={cocktail.name}
+                  className={cardClassName}
+                >
+                  {image}
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  // The left card rotates right into the centre, the right
+                  // one (and the hidden ones, never clickable) to the left.
+                  onClick={() => bringToFront(position === 0 ? -1 : 1)}
+                  aria-label={`Pokaż: ${cocktail.name}`}
+                  className={cardClassName}
+                >
+                  {image}
+                </button>
+              )}
             </motion.div>
           );
         })}
