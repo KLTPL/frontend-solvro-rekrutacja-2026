@@ -5,7 +5,11 @@ import { useCallback } from "react";
 
 import { useHydrated } from "@/hooks/use-hydrated";
 
-import { favoriteIdsAtom, toggleFavoriteId } from "./favorites-store";
+import {
+  favoriteIdsAtom,
+  insertFavoriteId,
+  toggleFavoriteId,
+} from "./favorites-store";
 
 const EMPTY: number[] = [];
 
@@ -20,10 +24,17 @@ export function useFavorites() {
     [setStoredIds],
   );
 
+  const restore = useCallback(
+    (id: number, index: number) =>
+      setStoredIds((current) => insertFavoriteId(current ?? [], id, index)),
+    [setStoredIds],
+  );
+
   return {
     ids,
     isLoaded: hydrated && storedIds !== null,
     isFavorite: (id: number) => ids.includes(id),
     toggle,
+    restore,
   };
 }

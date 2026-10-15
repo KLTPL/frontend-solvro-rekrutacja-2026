@@ -32,3 +32,13 @@ export function toggleFavoriteId(ids: number[], id: number): number[] {
     ? ids.filter((current) => current !== id)
     : [id, ...ids];
 }
+
+/** Puts a removed favourite back where it was (used by "undo"). */
+export function insertFavoriteId(
+  ids: number[],
+  id: number,
+  index: number,
+): number[] {
+  if (ids.includes(id)) return ids;
+  return ids.toSpliced(Math.min(index, ids.length), 0, id);
+}

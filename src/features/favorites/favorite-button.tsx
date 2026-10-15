@@ -3,6 +3,7 @@
 import { HeartIcon } from "lucide-react";
 import { AnimatePresence, motion, useAnimate } from "motion/react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
 
@@ -22,8 +23,9 @@ export function FavoriteButton({
   variant = "icon",
   className,
 }: FavoriteButtonProps) {
-  const { isFavorite, toggle } = useFavorites();
+  const { ids, isFavorite, toggle, restore } = useFavorites();
   const active = isFavorite(cocktailId);
+  const toastId = `favorite-${cocktailId}`;
   // Animate only real clicks, not favourites appearing once storage loads.
   const [interacted, setInteracted] = useState(false);
   const [heartRef, animate] = useAnimate<HTMLSpanElement>();
@@ -41,7 +43,19 @@ export function FavoriteButton({
       onClick={() => {
         setInteracted(true);
         toggle(cocktailId);
-        if (!active) {
+        if (active) {
+          // Removal is instant – offer a way back to the same spot in the list.
+          const index = ids.indexOf(cocktailId);
+          toast(`Usunięto z ulubionych: ${cocktailName}`, {
+            id: toastId,
+            duration: 6000,
+            action: {
+              label: "Cofnij",
+              onClick: () => restore(cocktailId, index),
+            },
+          });
+        } else {
+          toast.dismiss(toastId);
           // A kick of velocity from the heart's current size, so it pops
           // without restarting from scratch when tapped repeatedly.
           animate(
