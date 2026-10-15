@@ -18,12 +18,8 @@ import { pluralize } from "@/lib/pluralize";
 import { cn } from "@/lib/utils";
 
 import { useCocktailFilters } from "../use-cocktail-filters";
-import {
-  AlcoholToggle,
-  CategorySelect,
-  GlassSelect,
-  SortSelect,
-} from "./filter-controls";
+import { CategoryCombobox, GlassCombobox } from "./dictionary-comboboxes";
+import { AlcoholToggle, SortSelect } from "./filter-controls";
 import { IngredientCombobox } from "./ingredient-combobox";
 
 /** Filters in a bottom sheet for small screens. */
@@ -64,8 +60,8 @@ export function FiltersSheet({ className }: { className?: string }) {
         {/* Only the controls scroll on short screens; the buttons stay in view. */}
         <div className="-my-1 flex min-h-0 flex-col gap-3 overflow-y-auto overscroll-contain px-4 py-1">
           <AlcoholToggle className="w-full" />
-          <CategorySelect className="w-full" />
-          <GlassSelect className="w-full" />
+          <CategoryCombobox className="w-full" />
+          <GlassCombobox className="w-full" />
           <IngredientCombobox className="w-full" />
           <SortSelect className="w-full" />
         </div>

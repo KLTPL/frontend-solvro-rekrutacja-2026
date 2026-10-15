@@ -2,14 +2,12 @@ import { cacheLife } from "next/cache";
 
 import {
   fetchAllCocktailIds,
-  fetchCategories,
   fetchCocktail,
   fetchCocktails,
   fetchCocktailsByIds,
   fetchAllCocktailsWithIngredients,
-  fetchGlasses,
 } from "./api";
-import { summarizeUsedIngredients } from "./ingredient-stats";
+import { summarizeFilterOptions } from "./filter-options";
 import type { CocktailFilters } from "./types";
 
 /*
@@ -36,23 +34,11 @@ export async function getAllCocktailIds() {
   return fetchAllCocktailIds();
 }
 
-export async function getCategories() {
+/** ~1 MB of raw data reduced to a few small lists – computed once and cached. */
+export async function getFilterOptions() {
   "use cache";
   cacheLife("days");
-  return fetchCategories();
-}
-
-export async function getGlasses() {
-  "use cache";
-  cacheLife("days");
-  return fetchGlasses();
-}
-
-/** ~1 MB of raw data reduced to a small list – computed once and cached. */
-export async function getUsedIngredients() {
-  "use cache";
-  cacheLife("days");
-  return summarizeUsedIngredients(await fetchAllCocktailsWithIngredients());
+  return summarizeFilterOptions(await fetchAllCocktailsWithIngredients());
 }
 
 // Hand-picked for the hero: photos that match the pink-and-banana palette.

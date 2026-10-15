@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { ArrowUpDownIcon } from "lucide-react";
 
 import {
@@ -11,99 +10,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { categoryLabel } from "@/features/cocktails/labels";
-import {
-  categoriesOptions,
-  glassesOptions,
-} from "@/features/cocktails/queries";
 import type { CocktailSort } from "@/features/cocktails/types";
 import { cn } from "@/lib/utils";
 
 import { useCocktailFilters } from "../use-cocktail-filters";
 
-// Radix Select cannot hold an empty value, so "any" gets a sentinel.
-const ANY = "__any__";
-
 const triggerClassName = "h-10! rounded-full bg-card px-4 shadow-xs";
-
-function DictionarySelect({
-  label,
-  placeholder,
-  value,
-  options,
-  formatOption = (option) => option,
-  onChange,
-  className,
-}: {
-  label: string;
-  placeholder: string;
-  value: string | null;
-  options: string[] | undefined;
-  formatOption?: (option: string) => string;
-  onChange: (value: string | null) => void;
-  className?: string;
-}) {
-  return (
-    <Select
-      value={value ?? ANY}
-      onValueChange={(next) => onChange(next === ANY ? null : next)}
-    >
-      <SelectTrigger
-        aria-label={label}
-        className={cn(
-          triggerClassName,
-          value && "border-primary/50",
-          className,
-        )}
-      >
-        <SelectValue placeholder={placeholder} />
-      </SelectTrigger>
-      <SelectContent position="popper" className="max-h-80">
-        <SelectItem value={ANY}>{placeholder}</SelectItem>
-        {[...(options ?? [])]
-          .sort((a, b) => formatOption(a).localeCompare(formatOption(b), "pl"))
-          .map((option) => (
-            <SelectItem key={option} value={option}>
-              {formatOption(option)}
-            </SelectItem>
-          ))}
-      </SelectContent>
-    </Select>
-  );
-}
-
-export function CategorySelect({ className }: { className?: string }) {
-  const { params, setParams } = useCocktailFilters();
-  const { data } = useQuery(categoriesOptions);
-
-  return (
-    <DictionarySelect
-      label="Kategoria"
-      placeholder="Każda kategoria"
-      value={params.category}
-      options={data}
-      formatOption={categoryLabel}
-      onChange={(category) => setParams({ category })}
-      className={className}
-    />
-  );
-}
-
-export function GlassSelect({ className }: { className?: string }) {
-  const { params, setParams } = useCocktailFilters();
-  const { data } = useQuery(glassesOptions);
-
-  return (
-    <DictionarySelect
-      label="Rodzaj szkła"
-      placeholder="Każde szkło"
-      value={params.glass}
-      options={data}
-      onChange={(glass) => setParams({ glass })}
-      className={className}
-    />
-  );
-}
 
 const alcoholOptions = [
   { value: "any", label: "Wszystkie" },

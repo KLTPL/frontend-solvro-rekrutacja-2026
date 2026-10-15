@@ -1,7 +1,6 @@
 import { apiFetch } from "@/lib/api-client";
 
-import type { UsedIngredient } from "./ingredient-stats";
-
+import type { FilterOptions } from "./filter-options";
 import { buildCocktailSearchParams } from "./search-params";
 import type {
   Cocktail,
@@ -74,29 +73,11 @@ export async function fetchAllCocktailIds() {
   return data.map((cocktail) => cocktail.id);
 }
 
-export async function fetchCategories(signal?: Signal) {
-  const { data } = await apiFetch<{ data: string[] }>(
-    "/cocktails/categories",
-    undefined,
-    { signal },
-  );
-  return data;
-}
-
-export async function fetchGlasses(signal?: Signal) {
-  const { data } = await apiFetch<{ data: string[] }>(
-    "/cocktails/glasses",
-    undefined,
-    { signal },
-  );
-  return data;
-}
-
-/** Served by our own route handler (see `app/api/ingredients/route.ts`). */
-export async function fetchUsedIngredients(signal?: Signal) {
-  const response = await fetch("/api/ingredients", { signal });
+/** Served by our own route handler (see `app/api/filter-options/route.ts`). */
+export async function fetchFilterOptions(signal?: Signal) {
+  const response = await fetch("/api/filter-options", { signal });
   if (!response.ok) {
-    throw new Error(`Failed to load ingredients (${response.status})`);
+    throw new Error(`Failed to load filter options (${response.status})`);
   }
-  return (await response.json()) as UsedIngredient[];
+  return (await response.json()) as FilterOptions;
 }

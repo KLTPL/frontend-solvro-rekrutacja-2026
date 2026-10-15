@@ -1,12 +1,8 @@
 "use client";
 
 import { ActiveFilters } from "./active-filters";
-import {
-  AlcoholToggle,
-  CategorySelect,
-  GlassSelect,
-  SortSelect,
-} from "./filter-controls";
+import { CategoryCombobox, GlassCombobox } from "./dictionary-comboboxes";
+import { AlcoholToggle, SortSelect } from "./filter-controls";
 import { FiltersSheet } from "./filters-sheet";
 import { IngredientCombobox } from "./ingredient-combobox";
 import { SearchInput } from "./search-input";
@@ -29,8 +25,11 @@ export function FiltersBar() {
 
       <div className="mb-3 hidden flex-wrap gap-2 lg:flex">
         <AlcoholToggle />
-        <CategorySelect className="min-w-48" />
-        <GlassSelect className="min-w-48" />
+        <CategoryCombobox
+          className="min-w-48"
+          stickyOffset={STICKY_BARS_HEIGHT}
+        />
+        <GlassCombobox className="min-w-48" stickyOffset={STICKY_BARS_HEIGHT} />
         <IngredientCombobox
           className="min-w-48"
           stickyOffset={STICKY_BARS_HEIGHT}

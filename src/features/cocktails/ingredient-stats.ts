@@ -41,14 +41,3 @@ export function summarizeUsedIngredients(
       b.cocktailCount - a.cocktailCount || a.name.localeCompare(b.name, "en"),
   );
 }
-
-/** Case- and accent-insensitive substring match used by the ingredient picker. */
-export function matchesIngredient(name: string, query: string): boolean {
-  const normalize = (value: string) =>
-    value
-      .normalize("NFD")
-      .replace(/\p{Diacritic}/gu, "")
-      .toLowerCase()
-      .trim();
-  return normalize(name).includes(normalize(query));
-}

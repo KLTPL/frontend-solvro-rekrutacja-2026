@@ -5,16 +5,8 @@ import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CocktailCatalog } from "@/features/cocktails/components/cocktail-catalog";
 import { CocktailGridSkeleton } from "@/features/cocktails/components/cocktail-grid";
-import {
-  categoriesOptions,
-  cocktailsInfiniteOptions,
-  glassesOptions,
-} from "@/features/cocktails/queries";
-import {
-  getCategories,
-  getCocktailsPage,
-  getGlasses,
-} from "@/features/cocktails/server";
+import { cocktailsInfiniteOptions } from "@/features/cocktails/queries";
+import { getCocktailsPage } from "@/features/cocktails/server";
 import {
   loadFilterParams,
   toCocktailFilters,
@@ -58,14 +50,10 @@ async function CatalogWithData({
   await connection();
   const queryClient = getQueryClient();
 
-  await Promise.all([
-    queryClient.prefetchInfiniteQuery({
-      ...cocktailsInfiniteOptions(filters),
-      queryFn: ({ pageParam }) => getCocktailsPage(filters, pageParam),
-    }),
-    queryClient.prefetchQuery({ ...categoriesOptions, queryFn: getCategories }),
-    queryClient.prefetchQuery({ ...glassesOptions, queryFn: getGlasses }),
-  ]);
+  await queryClient.prefetchInfiniteQuery({
+    ...cocktailsInfiniteOptions(filters),
+    queryFn: ({ pageParam }) => getCocktailsPage(filters, pageParam),
+  });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

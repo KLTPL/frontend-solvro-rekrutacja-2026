@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import { usedIngredientsOptions } from "@/features/cocktails/queries";
+import { filterOptionsQuery } from "@/features/cocktails/queries";
 
 import { useCocktailFilters } from "./use-cocktail-filters";
 
@@ -10,12 +10,14 @@ import { useCocktailFilters } from "./use-cocktail-filters";
 export function useSelectedIngredients() {
   const { params } = useCocktailFilters();
   const { data } = useQuery({
-    ...usedIngredientsOptions,
+    ...filterOptionsQuery,
     enabled: params.ingredients.length > 0,
   });
 
   return params.ingredients.map((id) => ({
     id,
-    name: data?.find((ingredient) => ingredient.id === id)?.name ?? null,
+    name:
+      data?.ingredients.find((ingredient) => ingredient.id === id)?.name ??
+      null,
   }));
 }

@@ -32,7 +32,7 @@ An app for browsing, searching and saving cocktails from the [Solvro Cocktails A
 
 - **One main page plus real routes.** Instead of a landing page with subpages, the hero is followed directly by the catalogue. Details have their own URL (`/cocktails/[id]`) and are shown in a modal via _intercepting routes_, so browsing never loses the scroll position or the filters.
 - **Rendering.** All 220 cocktail pages are prerendered at build time. On the home page the static shell (hero, header) is sent immediately, while the list, filtered by the URL, is rendered on the server and streamed in. The data is passed into the TanStack Query cache (`HydrationBoundary`), so the client does not fetch it again.
-- **Caching.** Server-side API calls are wrapped in `"use cache"` with `cacheLife`. The list of used ingredients is computed on the server from ~1 MB of data and served as a static `/api/ingredients` endpoint.
+- **Caching.** Server-side API calls are wrapped in `"use cache"` with `cacheLife`. The ingredients, categories and glasses used by any cocktail (with counts) are computed on the server from ~1 MB of data and served as a static `/api/filter-options` endpoint.
 - **Hydration and `localStorage`.** Values from the browser (favourites, measure unit) are rendered only after hydration (`useHydrated`). Suspense boundaries hydrate independently, so a header hydrated earlier could otherwise fill the store before the list hydrates and cause a mismatch with the server HTML.
 - **Colours.** A cream background, powder pink surfaces, raspberry for actions, banana yellow for accents and plum instead of black for text. Pastels are used only as backgrounds, so text on them always has sufficient contrast.
 - **Animation.** One main animation in the hero (a carousel of arch-framed photos with ingredient cut-outs from the API floating around them). Everything else is micro-interactions: the heart button, the favourites counter, cards moving into place when filters change and the rolling hero caption.
@@ -72,7 +72,7 @@ The app runs at <http://localhost:3000>.
 
 ```
 src/
-  app/                 routes (home, /cocktails/[id], @modal, /favorites, /api/ingredients)
+  app/                 routes (home, /cocktails/[id], @modal, /favorites, /api/filter-options)
   components/          layout and shared components, ui/ = shadcn
   features/
     cocktails/         API, queries, types, logic (measures, steps) and cocktail components
