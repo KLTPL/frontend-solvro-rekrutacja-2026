@@ -11,6 +11,7 @@ import {
   CocktailGridSkeleton,
 } from "@/features/cocktails/components/cocktail-grid";
 import { cocktailsByIdsOptions } from "@/features/cocktails/queries";
+import { userErrorMessage } from "@/lib/error-message";
 import { pluralize } from "@/lib/pluralize";
 
 import { useFavorites } from "./use-favorites";
@@ -50,7 +51,7 @@ export function FavoritesView() {
       <StateMessage
         icon={<CircleAlertIcon />}
         title="Nie udało się pobrać ulubionych"
-        description={error.message}
+        description={userErrorMessage(error)}
         action={
           <Button onClick={() => refetch()} className="rounded-full px-4">
             <RotateCcwIcon data-icon="inline-start" />

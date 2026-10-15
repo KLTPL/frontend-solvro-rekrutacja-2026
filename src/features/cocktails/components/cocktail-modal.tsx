@@ -9,6 +9,7 @@ import { StateMessage } from "@/components/state-message";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { isNotFoundError } from "@/lib/api-client";
+import { userErrorMessage } from "@/lib/error-message";
 
 import { cachedDetailsPlaceholder } from "../cache-lookup";
 import { parseCocktailId } from "../parse-id";
@@ -72,7 +73,7 @@ function ModalBody({ id }: { id: number }) {
           icon={<CircleAlertIcon />}
           title="Nie udało się pobrać koktajlu"
           className="justify-center"
-          description={query.error.message}
+          description={userErrorMessage(query.error)}
           action={
             <Button
               onClick={() => query.refetch()}

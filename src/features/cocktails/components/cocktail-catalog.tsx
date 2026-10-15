@@ -7,6 +7,7 @@ import { StateMessage } from "@/components/state-message";
 import { Button } from "@/components/ui/button";
 import { FiltersBar } from "@/features/filters/components/filters-bar";
 import { useCocktailFilters } from "@/features/filters/use-cocktail-filters";
+import { userErrorMessage } from "@/lib/error-message";
 import { pluralize } from "@/lib/pluralize";
 import { cn } from "@/lib/utils";
 
@@ -49,7 +50,7 @@ function CatalogResults() {
       <StateMessage
         icon={<CircleAlertIcon />}
         title="Nie udało się pobrać koktajli"
-        description={error.message}
+        description={userErrorMessage(error)}
         action={
           <Button onClick={() => refetch()} className="rounded-full px-4">
             <RotateCcwIcon data-icon="inline-start" />

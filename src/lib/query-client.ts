@@ -1,11 +1,18 @@
 import {
   defaultShouldDehydrateQuery,
   isServer,
+  MutationCache,
+  QueryCache,
   QueryClient,
 } from "@tanstack/react-query";
 
 function makeQueryClient() {
   return new QueryClient({
+    // The UI shows a friendly message – keep the real error in the console.
+    queryCache: new QueryCache({ onError: (error) => console.error(error) }),
+    mutationCache: new MutationCache({
+      onError: (error) => console.error(error),
+    }),
     defaultOptions: {
       queries: {
         // Data from the server is fresh enough not to refetch right after hydration.
