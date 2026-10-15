@@ -24,6 +24,7 @@ export default function Error({
         className="w-full max-w-lg"
         icon={<CircleAlertIcon />}
         title="Coś się rozlało"
+        titleAs="h1"
         description="Nie udało się wczytać tej strony. Najczęściej pomaga ponowna próba."
         action={
           <Button onClick={() => retry()} className="rounded-full px-4">

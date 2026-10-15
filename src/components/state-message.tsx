@@ -1,10 +1,12 @@
-import type { ReactNode } from "react";
+import type { ElementType, ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
 interface StateMessageProps {
   icon: ReactNode;
   title: string;
+  /** Heading element – `h1` when the message is the whole page. */
+  titleAs?: ElementType;
   description?: ReactNode;
   action?: ReactNode;
   className?: string;
@@ -14,6 +16,7 @@ interface StateMessageProps {
 export function StateMessage({
   icon,
   title,
+  titleAs: Title = "h3",
   description,
   action,
   className,
@@ -28,7 +31,7 @@ export function StateMessage({
       <span className="grid size-14 place-items-center rounded-full bg-secondary text-primary [&_svg]:size-6">
         {icon}
       </span>
-      <h3 className="text-xl font-semibold">{title}</h3>
+      <Title className="text-xl font-semibold">{title}</Title>
       {description && (
         <p className="max-w-sm text-sm text-pretty text-muted-foreground">
           {description}

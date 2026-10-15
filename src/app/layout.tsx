@@ -47,9 +47,18 @@ export default function RootLayout({ children, modal }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="flex min-h-full flex-col">
+        <a
+          href="#content"
+          className="sr-only rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50"
+        >
+          Przejdź do treści
+        </a>
         <Providers>
           <SiteHeader />
-          <div className="flex flex-1 flex-col">{children}</div>
+          {/* Offset by the sticky header, so the skip link does not land under it. */}
+          <div id="content" className="flex flex-1 scroll-mt-16 flex-col">
+            {children}
+          </div>
           <SiteFooter />
           {modal}
         </Providers>

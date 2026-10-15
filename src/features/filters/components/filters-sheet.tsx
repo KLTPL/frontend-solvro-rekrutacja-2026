@@ -61,7 +61,7 @@ export function FiltersSheet({ className }: { className?: string }) {
           </BottomSheetTitle>
         </BottomSheetHeader>
         {/* Only the controls scroll on short screens; the buttons stay in view. */}
-        <div className="-my-1 flex min-h-0 flex-col gap-3 overflow-y-auto px-4 py-1">
+        <div className="-my-1 flex min-h-0 flex-col gap-3 overflow-y-auto overscroll-contain px-4 py-1">
           <AlcoholToggle className="w-full" />
           <CategorySelect className="w-full" />
           <GlassSelect className="w-full" />

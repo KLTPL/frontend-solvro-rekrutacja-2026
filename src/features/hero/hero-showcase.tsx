@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowRightIcon, PauseIcon, PlayIcon } from "lucide-react";
 import {
   AnimatePresence,
   motion,
@@ -33,7 +33,8 @@ const cardClassName =
 /**
  * The hero's main animation: three arch-framed cocktails that rise in on
  * load and then slowly rotate like a carousel, with garnishes floating
- * around them. Pauses on hover, off-screen and with reduced motion.
+ * around them. Pauses on hover, on focus, off-screen, with reduced motion
+ * and when the user stops it.
  * The centre card opens its cocktail, a side card is brought to the front.
  */
 export function HeroShowcase({ cocktails }: { cocktails: Cocktail[] }) {
@@ -49,8 +50,11 @@ export function HeroShowcase({ cocktails }: { cocktails: Cocktail[] }) {
   const [hovered, setHovered] = useState(false);
   const featuredLinkRef = useRef<HTMLAnchorElement>(null);
   const focusFeaturedRef = useRef(false);
+  // The links must not change under keyboard focus.
+  const [focused, setFocused] = useState(false);
+  const [paused, setPaused] = useState(false);
 
-  const isRotating = inView && !hovered && !reduceMotion;
+  const isRotating = inView && !hovered && !focused && !paused && !reduceMotion;
   useEffect(() => {
     if (!isRotating) return;
     const interval = setInterval(() => {
@@ -85,6 +89,14 @@ export function HeroShowcase({ cocktails }: { cocktails: Cocktail[] }) {
       className="relative mx-auto w-full max-w-md"
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
+      // Keyboard focus only – a mouse click on a card should not stop the
+      // rotation once the pointer leaves.
+      onFocus={(event) => setFocused(event.target.matches(":focus-visible"))}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          setFocused(false);
+        }
+      }}
     >
       {/* Soft colour wash behind the glasses. */}
       <div
@@ -151,7 +163,7 @@ export function HeroShowcase({ cocktails }: { cocktails: Cocktail[] }) {
         <FloatingGarnishes />
       </div>
 
-      <div className="relative z-10 mt-2 flex justify-center">
+      <div className="relative z-10 mt-2 flex items-center justify-center gap-2">
         <Link
           href={`/cocktails/${featured.id}`}
           scroll={false}
@@ -182,6 +194,20 @@ export function HeroShowcase({ cocktails }: { cocktails: Cocktail[] }) {
             <span className="sr-only">Zobacz przepis</span>
           </span>
         </Link>
+        <button
+          type="button"
+          aria-pressed={paused}
+          aria-label="Wstrzymaj karuzelę"
+          title={paused ? "Wznów karuzelę" : "Wstrzymaj karuzelę"}
+          onClick={() => setPaused((current) => !current)}
+          className="grid size-9 place-items-center rounded-full border border-border bg-card/90 text-muted-foreground shadow-lg backdrop-blur transition-colors hover:border-primary/40 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+        >
+          {paused ? (
+            <PlayIcon aria-hidden className="size-4" />
+          ) : (
+            <PauseIcon aria-hidden className="size-4" />
+          )}
+        </button>
       </div>
     </div>
   );

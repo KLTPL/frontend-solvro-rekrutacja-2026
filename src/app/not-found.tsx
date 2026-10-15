@@ -11,6 +11,7 @@ export default function NotFound() {
         className="w-full max-w-lg"
         icon={<GlassWaterIcon />}
         title="Pusta szklanka"
+        titleAs="h1"
         description="Nie znaleźliśmy tej strony ani koktajlu. Może wybierzesz coś z katalogu?"
         action={
           <Button asChild className="rounded-full px-4">

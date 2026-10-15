@@ -47,7 +47,7 @@ export function CocktailModal() {
         {/* The scrollbar's space is reserved up front, so it does not narrow
             the photo when a long recipe needs it. Isolated, so pinned bars
             inside stay under the close button. */}
-        <div className="isolate grid [scrollbar-gutter:stable_both-edges] overflow-y-auto p-5 sm:p-8">
+        <div className="isolate grid [scrollbar-gutter:stable_both-edges] overflow-y-auto overscroll-contain p-5 sm:p-8">
           {id === null ? <CocktailNotFound /> : <ModalBody id={id} />}
         </div>
       </DialogContent>
