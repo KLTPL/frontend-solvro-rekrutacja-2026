@@ -7,6 +7,7 @@ import { MotionConfig } from "motion/react";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import type { ReactNode } from "react";
 
+import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { getQueryClient } from "@/lib/query-client";
 
@@ -19,7 +20,10 @@ export function Providers({ children }: { children: ReactNode }) {
         <NuqsAdapter>
           {/* Honour the OS "reduce motion" setting for every motion component. */}
           <MotionConfig reducedMotion="user">
-            <TooltipProvider delayDuration={300}>{children}</TooltipProvider>
+            <TooltipProvider delayDuration={300}>
+              {children}
+              <Toaster />
+            </TooltipProvider>
           </MotionConfig>
         </NuqsAdapter>
       </JotaiProvider>
