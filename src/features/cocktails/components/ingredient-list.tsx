@@ -41,8 +41,9 @@ export function IngredientList({
         return (
           <li
             key={`${ingredient.id}-${index}`}
-            className="flex items-center gap-3 py-2.5"
+            className="relative flex items-center gap-3 py-2.5"
           >
+            {/* Stretched over the whole row, so it is easy to tick on a phone. */}
             <button
               type="button"
               role="checkbox"
@@ -50,7 +51,7 @@ export function IngredientList({
               aria-label={`Mam: ${ingredient.name}`}
               onClick={() => toggle(ingredient.id)}
               className={cn(
-                "grid size-6 shrink-0 place-items-center rounded-full border-2 border-input transition-colors focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none",
+                "grid size-6 shrink-0 place-items-center rounded-full border-2 border-input transition-colors after:absolute after:inset-0 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none",
                 isChecked &&
                   "border-primary bg-primary text-primary-foreground",
               )}
@@ -66,9 +67,10 @@ export function IngredientList({
 
             <IngredientThumb ingredient={ingredient} />
 
+            {/* Lets taps through to the checkbox area – only the info button catches them. */}
             <div
               className={cn(
-                "min-w-0 flex-1 transition-opacity",
+                "pointer-events-none min-w-0 flex-1 transition-opacity",
                 isChecked && "opacity-50",
               )}
             >
@@ -89,7 +91,7 @@ export function IngredientList({
 
 function IngredientThumb({ ingredient }: { ingredient: CocktailIngredient }) {
   return (
-    <span className="relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-full bg-blush/50">
+    <span className="pointer-events-none relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-full bg-blush/50">
       {ingredient.imageUrl ? (
         <Image
           src={ingredient.imageUrl}
@@ -118,7 +120,8 @@ function IngredientInfo({ ingredient }: { ingredient: CocktailIngredient }) {
 
   return (
     <Popover>
-      <PopoverTrigger className="group/info inline-flex items-center gap-1.5 rounded-md text-left font-medium underline decoration-border decoration-dotted underline-offset-4 hover:decoration-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none">
+      {/* Above the row-wide checkbox area. */}
+      <PopoverTrigger className="group/info pointer-events-auto relative z-10 inline-flex items-center gap-1.5 rounded-md text-left font-medium underline decoration-border decoration-dotted underline-offset-4 hover:decoration-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none">
         {ingredient.name}
         <InfoIcon
           aria-hidden
