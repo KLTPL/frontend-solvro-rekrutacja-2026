@@ -73,12 +73,15 @@ export function SearchInput() {
       <InputGroupInput
         ref={inputRef}
         type="search"
+        name="q"
+        autoComplete="off"
+        spellCheck={false}
         value={value}
         onChange={(event) => change(event.target.value)}
         onKeyDown={(event) => {
           if (event.key === "Escape") change("", { immediate: true });
         }}
-        placeholder="Szukaj koktajlu, np. Mojito"
+        placeholder="Szukaj koktajlu, np. Mojito…"
         aria-label="Szukaj koktajlu po nazwie"
         className="text-base [&::-webkit-search-cancel-button]:hidden"
       />
