@@ -84,6 +84,7 @@ export function ActiveFilters() {
           className="-mt-3"
         >
           <div
+            role="group"
             className="relative flex flex-wrap items-center gap-2 pt-3"
             aria-label="Aktywne filtry"
           >

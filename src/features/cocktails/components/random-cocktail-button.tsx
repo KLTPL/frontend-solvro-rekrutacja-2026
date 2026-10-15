@@ -51,8 +51,7 @@ export function RandomCocktailButton({
       size={size}
       onClick={() => mutate()}
       disabled={isBusy}
-      aria-label={compact ? "Wylosuj koktajl" : undefined}
-      title="Wylosuj koktajl"
+      title="Losuj koktajl"
       className={cn("rounded-full", className)}
     >
       <ShuffleIcon

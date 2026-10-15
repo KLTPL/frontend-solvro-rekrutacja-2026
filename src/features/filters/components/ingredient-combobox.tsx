@@ -92,6 +92,7 @@ export function IngredientCombobox({ className }: { className?: string }) {
             value={search}
             onValueChange={setSearch}
             placeholder="Szukaj składnika…"
+            aria-label="Szukaj składnika"
           />
           <CommandList aria-busy={isPending}>
             <CommandEmpty>
@@ -145,10 +146,8 @@ function IngredientOption({
         )}
       </span>
       <span className="flex-1 truncate">{ingredient.name}</span>
-      <span
-        className="text-xs text-muted-foreground tabular-nums"
-        aria-label={`w ${ingredient.cocktailCount} koktajlach`}
-      >
+      <span className="text-xs text-muted-foreground tabular-nums">
+        <span className="sr-only">, liczba koktajli: </span>
         {ingredient.cocktailCount}
       </span>
     </CommandItem>

@@ -49,6 +49,7 @@ export function FiltersSheet({ className }: { className?: string }) {
           Filtry
           {activeCount > 0 && (
             <span className="grid size-5 place-items-center rounded-full bg-primary text-xs text-primary-foreground tabular-nums">
+              <span className="sr-only">, aktywne: </span>
               {activeCount}
             </span>
           )}
