@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useTransition, type ComponentProps } from "react";
 
 import { Button } from "@/components/ui/button";
+import { userErrorMessage } from "@/lib/error-message";
 import { cn } from "@/lib/utils";
 
 import { fetchRandomCocktail } from "../api";
@@ -30,7 +31,7 @@ export function RandomCocktailButton({
   // Opening the modal needs its own server round trip after the draw.
   const [isNavigating, startTransition] = useTransition();
 
-  const { mutate, isPending, isError } = useMutation({
+  const { mutate, isPending, isError, error } = useMutation({
     mutationFn: async () => {
       const cocktail = await fetchRandomCocktail();
       // Load the details before navigating, so the modal opens complete.
@@ -44,27 +45,36 @@ export function RandomCocktailButton({
   });
   // Busy until the modal is open, so a second click cannot draw again.
   const isBusy = isPending || isNavigating;
+  const errorMessage = isError
+    ? `Nie udało się wylosować koktajlu. ${userErrorMessage(error)}`
+    : "";
 
   return (
-    <Button
-      variant={variant}
-      size={size}
-      onClick={() => mutate()}
-      disabled={isBusy}
-      title="Losuj koktajl"
-      className={cn("rounded-full", className)}
-    >
-      <ShuffleIcon
-        data-icon="inline-start"
-        aria-hidden
-        className={cn(
-          "transition-transform duration-500",
-          isBusy && "motion-safe:animate-spin",
-        )}
-      />
-      <span className={cn(compact && "sr-only sm:not-sr-only")}>
-        {isBusy ? "Losuję…" : isError ? "Spróbuj ponownie" : "Losuj koktajl"}
+    <>
+      <Button
+        variant={variant}
+        size={size}
+        onClick={() => mutate()}
+        disabled={isBusy}
+        title={errorMessage || "Losuj koktajl"}
+        className={cn("rounded-full", className)}
+      >
+        <ShuffleIcon
+          data-icon="inline-start"
+          aria-hidden
+          className={cn(
+            "transition-transform duration-500",
+            isBusy && "motion-safe:animate-spin",
+          )}
+        />
+        <span className={cn(compact && "sr-only sm:not-sr-only")}>
+          {isBusy ? "Losuję…" : isError ? "Spróbuj ponownie" : "Losuj koktajl"}
+        </span>
+      </Button>
+      {/* Always mounted, so screen readers announce the failure when it appears. */}
+      <span role="status" className="sr-only">
+        {errorMessage}
       </span>
-    </Button>
+    </>
   );
 }
