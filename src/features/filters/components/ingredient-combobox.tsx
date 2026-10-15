@@ -29,7 +29,14 @@ import { cn } from "@/lib/utils";
 import { useCocktailFilters } from "../use-cocktail-filters";
 import { useSelectedIngredients } from "../use-selected-ingredients";
 
-export function IngredientCombobox({ className }: { className?: string }) {
+export function IngredientCombobox({
+  className,
+  stickyOffset = 0,
+}: {
+  className?: string;
+  /** Height of sticky bars above the trigger – the list hides once it slides under them. */
+  stickyOffset?: number;
+}) {
   const { params, setParams } = useCocktailFilters();
   const selected = useSelectedIngredients();
   const queryClient = useQueryClient();
@@ -86,7 +93,14 @@ export function IngredientCombobox({ className }: { className?: string }) {
           <ChevronDownIcon aria-hidden className="text-muted-foreground" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-72 p-0" align="start">
+      {/* The page keeps scrolling under a non-modal popover – without this the
+          list would stay pinned over the header after the trigger has left. */}
+      <PopoverContent
+        className="w-72 p-0"
+        align="start"
+        hideWhenDetached
+        collisionPadding={{ top: stickyOffset }}
+      >
         <Command shouldFilter={false}>
           <CommandInput
             value={search}

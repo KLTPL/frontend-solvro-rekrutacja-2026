@@ -11,6 +11,9 @@ import { FiltersSheet } from "./filters-sheet";
 import { IngredientCombobox } from "./ingredient-combobox";
 import { SearchInput } from "./search-input";
 
+// Site header (h-16) plus the sticky search row below (py-2 + h-11).
+const STICKY_BARS_HEIGHT = 64 + 60;
+
 export function FiltersBar() {
   // A fragment on purpose: the sticky search row must be a direct child of
   // the catalogue section, so it stays pinned through the whole list.
@@ -28,7 +31,10 @@ export function FiltersBar() {
         <AlcoholToggle />
         <CategorySelect className="min-w-48" />
         <GlassSelect className="min-w-48" />
-        <IngredientCombobox className="min-w-48" />
+        <IngredientCombobox
+          className="min-w-48"
+          stickyOffset={STICKY_BARS_HEIGHT}
+        />
       </div>
 
       <ActiveFilters />
