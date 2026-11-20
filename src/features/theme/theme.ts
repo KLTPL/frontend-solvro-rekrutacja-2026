@@ -15,7 +15,20 @@ export const themeInitScript = `(() => {
   }
   const dark = stored ? stored === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
   document.documentElement.classList.toggle("dark", dark);
+  const meta = document.querySelector('meta[name="color-scheme"]');
+  if (meta) meta.content = dark ? "dark" : "light";
 })();`;
+
+/**
+ * Keeps <meta name="color-scheme"> in step with the theme, so native UI
+ * (scrollbars, form controls) matches before the stylesheet has loaded.
+ */
+function syncColorSchemeMeta(scheme: Theme) {
+  const meta = document.querySelector<HTMLMetaElement>(
+    'meta[name="color-scheme"]',
+  );
+  if (meta) meta.content = scheme;
+}
 
 export function readTheme(): Theme {
   return document.documentElement.classList.contains("dark") ? "dark" : "light";
@@ -28,6 +41,7 @@ export function applyTheme(theme: Theme) {
     // background – switch every colour in the same frame instead.
     root.classList.add("theme-switching");
     root.classList.toggle("dark", theme === "dark");
+    syncColorSchemeMeta(theme);
     void root.offsetHeight; // Apply the new colours while transitions are off.
     root.classList.remove("theme-switching");
     localStorage.setItem(THEME_STORAGE_KEY, theme);
