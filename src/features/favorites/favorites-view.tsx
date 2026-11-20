@@ -19,7 +19,7 @@ import { useFavorites } from "./use-favorites";
 export function FavoritesView() {
   const { ids, isLoaded } = useFavorites();
   // Sorted, so the cache key does not depend on the order of favouriting.
-  const sortedIds = [...ids].sort((a, b) => a - b);
+  const sortedIds = ids.toSorted((a, b) => a - b);
   const { data, isPending, isError, error, refetch } = useQuery({
     ...cocktailsByIdsOptions(sortedIds),
     enabled: isLoaded,
