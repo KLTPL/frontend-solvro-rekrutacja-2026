@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist, Geist_Mono } from "next/font/google";
 
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -33,6 +33,11 @@ export const metadata: Metadata = {
   },
   description:
     "Przeglądaj, wyszukuj i zapisuj ulubione koktajle. Składniki, proporcje i instrukcje w jednym miejscu.",
+};
+
+// The theme script narrows this to "light" or "dark" before first paint.
+export const viewport: Viewport = {
+  colorScheme: "light dark",
 };
 
 export default function RootLayout({ children, modal }: LayoutProps<"/">) {
